@@ -4,7 +4,7 @@ import "./DataStructure.sol";
 import "./Candidates.sol";
 import "./Voters.sol";
 
-contract EVM_Voting is DataStructure, Candidates, Voters {
+contract Voting is DataStructure, Candidates, Voters {
 
     event eventAdded(bytes32 evtID);
     event candidateEventAdded(address candidate);
@@ -115,7 +115,7 @@ contract EVM_Voting is DataStructure, Candidates, Voters {
             }
         }
         require(
-            ret_val == false,
+            ret_val == true,
             "Must be registered in event."
         );
     }
@@ -134,8 +134,8 @@ contract EVM_Voting is DataStructure, Candidates, Voters {
             }
         }
         require(
-            ret_val == true,
-            "Must be registered in event."
+            ret_val == false,
+            "Must not yet registered in event."
         );
     }
 
@@ -170,6 +170,13 @@ contract EVM_Voting is DataStructure, Candidates, Voters {
         );
     }
 
+    /**
+     * @dev Function to register event
+     * @param eventName as the name for the event
+     * @param location as the location of the event
+     * @param startDate is the date voting started
+     * @param period is the voting period until finish
+     */
     function registerEvent(
         string memory eventName, 
         string memory location, 
@@ -189,6 +196,63 @@ contract EVM_Voting is DataStructure, Candidates, Voters {
         emit eventAdded(evtID);
     }
 
+    /**
+     * @dev Function to get event by name
+     * @param eventName as the name for the event
+     * @return event details
+     */
+    function getEventByName(string memory eventName)
+    public
+    view
+    existedEvent(keccak256(abi.encodePacked(eventName)))
+    returns(bytes32, string memory, string memory, uint, uint)
+    {
+        bytes32 evtID = keccak256(abi.encodePacked(eventName));
+        
+        return (regEvents[evtID].evt.eventID, 
+                regEvents[evtID].evt.eventName,
+                regEvents[evtID].evt.location,
+                regEvents[evtID].evt.dateStart,
+                regEvents[evtID].evt.dateEnd);
+    }
+
+    /**
+     * @dev Function to get event by id
+     * @param evtID is the Keccak hashed ID for event
+     * @return event details
+     */
+    function getEventByID(bytes32 evtID)
+    public
+    view
+    existedEvent(evtID)
+    returns(bytes32, string memory, string memory, uint, uint)
+    {
+        return (regEvents[evtID].evt.eventID, 
+                regEvents[evtID].evt.eventName,
+                regEvents[evtID].evt.location,
+                regEvents[evtID].evt.dateStart,
+                regEvents[evtID].evt.dateEnd);
+    }
+
+    /**
+     * @dev Function to get candidates listed in event
+     * @param evtID is the Keccak hashed ID for event
+     * @return array of candidate address
+     */
+    function getCandidatesByEventID(bytes32 evtID)
+    public
+    view
+    existedEvent(evtID)
+    returns(address[] memory)
+    {
+        return regEvents[evtID].candidateAddr;
+    }
+
+    /**
+     * @dev Function to add the candidate to event
+     * @param candidate is the address for each candidate
+     * @param evtID is the Keccak hashed ID for event
+     */
     function addCandidateToEvent(address candidate, bytes32 evtID)
     public
     onlyOwner
@@ -201,6 +265,11 @@ contract EVM_Voting is DataStructure, Candidates, Voters {
         emit candidateEventAdded(candidate);
     }
 
+    /**
+     * @dev Function to remove the candidate from event
+     * @param candidate is the address for each candidate
+     * @param evtID is the Keccak hashed ID for event
+     */
     function removeCandidateFromEvent(address candidate, bytes32 evtID)
     public
     onlyOwner
@@ -224,6 +293,11 @@ contract EVM_Voting is DataStructure, Candidates, Voters {
         emit candidateEventRemoved(candidate);
     }
 
+    /**
+     * @dev Function to cast vote
+     * @param candidate is the address for each candidate
+     * @param evtID is the Keccak hashed ID for event
+     */
     function castVoting(address candidate, bytes32 evtID)
     public
     existedVoter(msg.sender)
@@ -238,7 +312,13 @@ contract EVM_Voting is DataStructure, Candidates, Voters {
         emit castVotingEvent(msg.sender);
     }
 
-    function getResult(address candidate, bytes32 evtID)
+    /**
+     * @dev Function to get voting result
+     * @param candidate is the address for each candidate
+     * @param evtID is the Keccak hashed ID for event
+     * @return voting count
+     */
+    function getResultByCandidate(address candidate, bytes32 evtID)
     public
     view
     existedEvent(evtID)

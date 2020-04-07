@@ -31,9 +31,8 @@ contract Voters is DataStructure {
     }
 
     /**
-     * Function: Add new address to Voter
-     * Parameter: address
-     * Return: -
+     * @dev Function to add voter
+     * @param addr is the voter address
      */
     function addToVoter(address addr)
     public
@@ -46,9 +45,8 @@ contract Voters is DataStructure {
     }
 
     /**
-     * Function: Remove address from Voter
-     * Parameter: address
-     * Return: -
+     * @dev Function to remove voter
+     * @param addr is the voter address
      */
     function removeFromVoter(address addr)
     public
@@ -62,9 +60,9 @@ contract Voters is DataStructure {
     }
 
     /**
-     * Function: Check if Black listed
-     * Parameter: address
-     * Return: bool
+     * @dev Function to check if voter existed
+     * @param addr is the voter address
+     * @return exist or not exist
      */
     function isVoterListed(address addr)
     public

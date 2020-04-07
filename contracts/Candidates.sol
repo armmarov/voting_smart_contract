@@ -9,8 +9,8 @@ contract Candidates is DataStructure {
      */
     uint private candidatesLen;
 
-    event candidateListAdded(address voter);
-    event candidateListRemoved(address voter);
+    event candidateListAdded(address candidate);
+    event candidateListRemoved(address candidate);
 
     constructor()
     public
@@ -31,9 +31,8 @@ contract Candidates is DataStructure {
     }
 
     /**
-     * Function: Add new address to Candidate
-     * Parameter: address
-     * Return: -
+     * @dev Function to add candidate
+     * @param addr is the candidate address
      */
     function addToCandidate(address addr)
     public
@@ -46,9 +45,8 @@ contract Candidates is DataStructure {
     }
 
     /**
-     * Function: Remove address from Candidate
-     * Parameter: address
-     * Return: -
+     * @dev Function to remove candidate
+     * @param addr is the candidate address
      */
     function removeFromCandidate(address addr)
     public
@@ -62,9 +60,9 @@ contract Candidates is DataStructure {
     }
 
     /**
-     * Function: Check if Black listed
-     * Parameter: address
-     * Return: bool
+     * @dev Function to check if candidate existed
+     * @param addr is the candidate address
+     * @return exist or not exist
      */
     function isCandidateListed(address addr)
     public
