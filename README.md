@@ -1,6 +1,6 @@
 # Voting Module
 
-This module is developed for blockchain integration with CPP project.
+This module is developed for voting DApps.
 
 
 ## To compile

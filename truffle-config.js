@@ -48,6 +48,19 @@ module.exports = {
      network_id: "*",       // Any network (default: none)
     },
 
+    production: {
+      host: "20.8.1.53",
+      port: 8546,
+      network_id: 5234,
+      gas: 800000000,      //make sure this gas allocation isn't over 4M, which is the max
+      from: "0x739239f730406d781982f260033103739d85c1d6",
+      // from: "0xF764De67B2eEff0d2fC8cEEF59df7757fe6C20E0",
+      timeoutBlocks: 200,
+      skipDryRun: true,
+      gasPrice: 0x001,
+      production: true
+    },
+
     // Another network with more advanced options...
     // advanced: {
       // port: 8777,             // Custom port
