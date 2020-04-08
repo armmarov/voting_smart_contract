@@ -7,7 +7,7 @@ contract("Voting", async accounts => {
         let contract = await Voting.new();
 
         // Candidate registered by Admin
-        const { logs } = await contract.addToCandidate(accounts[1], {from: accounts[0]});
+        const { logs } = await contract.addToCandidate("John", "990423013244", "Labour Party", accounts[1], {from: accounts[0]});
 
         // Check event
         let event = logs.find(l => l.event === 'candidateListAdded').args.candidate;
@@ -24,7 +24,7 @@ contract("Voting", async accounts => {
         let contract = await Voting.new();
 
         // Candidate registered by Admin
-        const { logs } = await contract.addToVoter(accounts[2], {from: accounts[0]});
+        const { logs } = await contract.addToVoter("John", "990423013244", accounts[2], {from: accounts[0]});
 
         // Check event
         let event = logs.find(l => l.event === 'voterListAdded').args.voter;
@@ -35,12 +35,60 @@ contract("Voting", async accounts => {
         assert.equal(listed, true, "Voter is not registered !")        
     })
 
+    it("should get candidate from candidatelist by ID", async function() {
+
+        let contract = await Voting.new();
+
+        // Candidate registered by Admin
+        await contract.addToCandidate("John", "990423013244", "Labour Party", accounts[1], {from: accounts[0]});
+
+        // Check candidate existed
+        let candidate = await contract.getCandidateByID.call("990423013244", {from: accounts[0]})
+        assert.equal(candidate[0], "John", "Voter is not registered !")        
+    })
+
+    it("should get candidate from candidatelist by address", async function() {
+
+        let contract = await Voting.new();
+
+        // Candidate registered by Admin
+        await contract.addToCandidate("John", "990423013244", "Labour Party", accounts[1], {from: accounts[0]});
+
+        // Check candidate existed
+        let candidate = await contract.getCandidateByAddress.call(accounts[1], {from: accounts[0]})
+        assert.equal(candidate[0], "John", "Voter is not registered !")        
+    })
+
+    it("should get voter from voterlist by ID", async function() {
+
+        let contract = await Voting.new();
+
+        // Candidate registered by Admin
+        await contract.addToVoter("John", "990423013244", accounts[2], {from: accounts[0]});
+
+        // Check candidate existed
+        let voter = await contract.getVoterByID.call("990423013244", {from: accounts[0]})
+        assert.equal(voter[0], "John", "Voter is not registered !")        
+    })
+
+    it("should get voter from voterlist by address", async function() {
+
+        let contract = await Voting.new();
+
+        // Candidate registered by Admin
+        await contract.addToVoter("John", "990423013244", accounts[2], {from: accounts[0]});
+
+        // Check candidate existed
+        let voter = await contract.getVoterByAddress.call(accounts[2], {from: accounts[0]})
+        assert.equal(voter[0], "John", "Voter is not registered !")        
+    })
+
     it("should remove candidate from candidatelist", async function() {
 
         let contract = await Voting.new();
 
         // Candidate registered by Admin
-        await contract.addToCandidate(accounts[3], {from: accounts[0]});
+        await contract.addToCandidate("John", "990423013244", "Labour Party", accounts[3], {from: accounts[0]});
 
         // Check candidate existed
         let listed = await contract.isCandidateListed.call(accounts[3], {from: accounts[0]})
@@ -63,7 +111,7 @@ contract("Voting", async accounts => {
         let contract = await Voting.new();
 
         // Candidate registered by Admin
-        await contract.addToVoter(accounts[3], {from: accounts[0]});
+        await contract.addToVoter("Alex", "980423013244", accounts[3], {from: accounts[0]});
 
         // Check candidate existed
         let listed = await contract.isVoterListed.call(accounts[3], {from: accounts[0]})
@@ -155,7 +203,7 @@ contract("Voting", async accounts => {
         assert.equal(eventID, hashedEventName, "Event is not added")  
 
         // Add user to candidate
-        await contract.addToCandidate(accounts[1], {from: accounts[0]});
+        await contract.addToCandidate("John", "990423013244", "Labour Party", accounts[1], {from: accounts[0]});
 
         // Event registered by Admin
         let evt = await contract.addCandidateToEvent(accounts[1], eventID, {from: accounts[0]});
@@ -184,7 +232,7 @@ contract("Voting", async accounts => {
         assert.equal(eventID, hashedEventName, "Event is not added")  
 
         // Add user to candidate
-        await contract.addToCandidate(accounts[1], {from: accounts[0]});
+        await contract.addToCandidate("John", "990423013244", "Labour Party", accounts[1], {from: accounts[0]});
 
         // Add candidate to event
         await contract.addCandidateToEvent(accounts[1], eventID, {from: accounts[0]});
@@ -215,8 +263,8 @@ contract("Voting", async accounts => {
         assert.equal(eventID, hashedEventName, "Event is not added")  
 
         // Add user to candidate
-        await contract.addToCandidate(accounts[1], {from: accounts[0]});
-        await contract.addToCandidate(accounts[2], {from: accounts[0]});
+        await contract.addToCandidate("John", "990423013244", "Labour Party", accounts[1], {from: accounts[0]});
+        await contract.addToCandidate("Alex", "980423013244", "Independence Party", accounts[2], {from: accounts[0]});
 
         // Add candidate to event
         await contract.addCandidateToEvent(accounts[1], eventID, {from: accounts[0]});
@@ -247,9 +295,9 @@ contract("Voting", async accounts => {
         assert.equal(eventID, hashedEventName, "Event is not added")  
 
         // Add user to candidate
-        await contract.addToCandidate(accounts[1], {from: accounts[0]});
-        await contract.addToCandidate(accounts[2], {from: accounts[0]});
-        await contract.addToVoter(accounts[3], {from: accounts[0]});
+        await contract.addToCandidate("John", "990423013244", "Labour Party", accounts[1], {from: accounts[0]});
+        await contract.addToCandidate("Sammy", "970423013244", "Independence Party", accounts[2], {from: accounts[0]});
+        await contract.addToVoter("Alex", "980423013244", accounts[3], {from: accounts[0]});
 
         // Add candidate to event
         await contract.addCandidateToEvent(accounts[1], eventID, {from: accounts[0]});
@@ -281,10 +329,10 @@ contract("Voting", async accounts => {
         assert.equal(eventID, hashedEventName, "Event is not added")  
 
         // Add user to candidate
-        await contract.addToCandidate(accounts[1], {from: accounts[0]});
-        await contract.addToCandidate(accounts[2], {from: accounts[0]});
-        await contract.addToVoter(accounts[3], {from: accounts[0]});
-        await contract.addToVoter(accounts[4], {from: accounts[0]});
+        await contract.addToCandidate("John", "990423013244", "Labour Party", accounts[1], {from: accounts[0]});
+        await contract.addToCandidate("Rock", "930423013244", "Independence Party", accounts[2], {from: accounts[0]});
+        await contract.addToVoter("Alex", "980423013244", accounts[3], {from: accounts[0]});
+        await contract.addToVoter("Sammy", "970423013244", accounts[4], {from: accounts[0]});
 
         // Add candidate to event
         await contract.addCandidateToEvent(accounts[1], eventID, {from: accounts[0]});

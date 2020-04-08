@@ -38,6 +38,9 @@ contract DataStructure {
     mapping(address => votingCandidate) public regCandidates;    
     mapping(address => voter) public regVoters;
     mapping(bytes32 => voting) internal regEvents;
+
+    address[] public candidatesList;
+    address[] public votersList;
     
     address public owner;
 

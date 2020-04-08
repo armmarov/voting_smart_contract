@@ -32,15 +32,23 @@ contract Candidates is DataStructure {
 
     /**
      * @dev Function to add candidate
+     * @param name is the candidate's name
+     * @param id is the candidate's id
+     * @param group is the candidate's group
      * @param addr is the candidate address
      */
-    function addToCandidate(address addr)
+    function addToCandidate(string memory name, string memory id, string memory group, address addr)
     public
     onlyOwner
     {
         require(addr != address(0), "Error address zero");
+        regCandidates[addr].name = name;
+        regCandidates[addr].id = id;
+        regCandidates[addr].group = group;
         regCandidates[addr].active = true;
         candidatesLen++;
+
+        candidatesList.push(addr);
         emit candidateListAdded(addr);
     }
 
@@ -57,6 +65,44 @@ contract Candidates is DataStructure {
         regCandidates[addr].active = false;
         candidatesLen++;
         emit candidateListRemoved(addr);
+    }
+
+        /**
+     * @dev Function to get candidate by id
+     * @param id is the candidate name
+     */
+    function getCandidateByID(string memory id)
+    public
+    view
+    returns (string memory, string memory, string memory, address, bool)
+    {
+        require(candidatesList.length > 0, "None in the list");
+        bytes32 tempid = keccak256(abi.encodePacked(id));
+        for(uint i=0; i<candidatesList.length; i++) {
+            if(keccak256(abi.encodePacked(regCandidates[candidatesList[i]].id)) == tempid) {
+                return (regCandidates[candidatesList[i]].name, 
+                        regCandidates[candidatesList[i]].id, 
+                        regCandidates[candidatesList[i]].group, 
+                        candidatesList[i],
+                        regCandidates[candidatesList[i]].active);
+            }
+        }
+    }
+
+    /**
+     * @dev Function to get candidate by address
+     * @param addr is the candidate name
+     */
+    function getCandidateByAddress(address addr)
+    public
+    view
+    returns (string memory, string memory, string memory, address, bool)
+    {
+        return (regCandidates[addr].name, 
+                regCandidates[addr].id, 
+                regCandidates[addr].group,
+                addr,
+                regCandidates[addr].active);
     }
 
     /**
