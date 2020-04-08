@@ -44,7 +44,7 @@ contract("Voting", async accounts => {
 
         // Check candidate existed
         let candidate = await contract.getCandidateByID.call("990423013244", {from: accounts[0]})
-        assert.equal(candidate[0], "John", "Voter is not registered !")        
+        assert.equal(candidate[0], "John", "Candidate is not registered !")        
     })
 
     it("should get candidate from candidatelist by address", async function() {
@@ -56,7 +56,20 @@ contract("Voting", async accounts => {
 
         // Check candidate existed
         let candidate = await contract.getCandidateByAddress.call(accounts[1], {from: accounts[0]})
-        assert.equal(candidate[0], "John", "Voter is not registered !")        
+        assert.equal(candidate[0], "John", "Candidate is not registered !")        
+    })
+
+    it("should get all candidates from candidatelist", async function() {
+
+        let contract = await Voting.new();
+
+        // Candidate registered by Admin
+        await contract.addToCandidate("John", "990423013244", "Labour Party", accounts[1], {from: accounts[0]});
+        await contract.addToCandidate("Alex", "980423013244", "Labour Party", accounts[1], {from: accounts[0]});
+
+        // Check candidate existed
+        let candidate = await contract.getAllCandidates.call({from: accounts[0]})
+        assert.equal(candidate.length, 2, "Candidate is not registered !")        
     })
 
     it("should get voter from voterlist by ID", async function() {
@@ -81,6 +94,19 @@ contract("Voting", async accounts => {
         // Check candidate existed
         let voter = await contract.getVoterByAddress.call(accounts[2], {from: accounts[0]})
         assert.equal(voter[0], "John", "Voter is not registered !")        
+    })
+
+    it("should get all voters from voterlist", async function() {
+
+        let contract = await Voting.new();
+
+        // Candidate registered by Admin
+        await contract.addToVoter("John", "990423013244", accounts[1], {from: accounts[0]});
+        await contract.addToVoter("Alex", "980423013244", accounts[1], {from: accounts[0]});
+
+        // Check candidate existed
+        let voters = await contract.getAllVoters.call({from: accounts[0]})
+        assert.equal(voters.length, 2, "Voter is not registered !")        
     })
 
     it("should remove candidate from candidatelist", async function() {

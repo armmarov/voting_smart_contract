@@ -102,6 +102,18 @@ contract Voters is DataStructure {
     }
 
     /**
+     * @dev Function to get all voters
+     * @return List of voters
+     */
+    function getAllVoters()
+    public
+    view
+    returns (address[] memory)
+    {
+        return votersList;
+    }
+
+    /**
      * @dev Function to check if voter existed
      * @param addr is the voter address
      * @return exist or not exist

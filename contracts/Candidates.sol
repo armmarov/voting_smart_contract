@@ -106,6 +106,18 @@ contract Candidates is DataStructure {
     }
 
     /**
+     * @dev Function to get all candidate
+     * @return List of candidates
+     */
+    function getAllCandidates()
+    public
+    view
+    returns (address[] memory)
+    {
+        return candidatesList;
+    }
+
+    /**
      * @dev Function to check if candidate existed
      * @param addr is the candidate address
      * @return exist or not exist
