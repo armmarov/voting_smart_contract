@@ -13,4 +13,5 @@ This module is developed for voting DApps.
 >> truffle test
 
 ## To run coverage
+>> npm install solidity-coverage
 >> truffle run coverage
