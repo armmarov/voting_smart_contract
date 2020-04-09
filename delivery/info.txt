@@ -1,6 +1,0 @@
-User Account Information
-- Address: 0x21C2FA9a2779b94D610f807daB838E17725B30A3
-- Password: testobc123
-
-Contract Information
-- Contract Address: 0xE6673A9e4832D539c58AB1DdBDE952C19F326cD1
