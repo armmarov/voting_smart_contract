@@ -3,15 +3,32 @@
 This module is developed for voting DApps.
 
 
-## To compile
-$ truffle compile
+#### To compile the source codes
 
-## To deploy to blockchain
+```bash
+$ truffle compile
+..
+```
+
+#### Deploy to the blockchain
+
+```bash
 $ truffle deploy
+..
+```
 
 ## To run unittest
+
+```bash
 $ truffle test
+..
+```
+
 
 ## To run coverage
+
+```bash
 $ npm install solidity-coverage
 $ truffle run coverage
+..
+```
